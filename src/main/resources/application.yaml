@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: user
+
+  datasource:
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/gaia-pet
+    password: admin
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+  output:
+    ansi:
+      enabled: ALWAYS
