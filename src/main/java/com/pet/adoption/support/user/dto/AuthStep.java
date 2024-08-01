@@ -1,6 +1,7 @@
 package com.pet.adoption.support.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum AuthStep {
 
@@ -14,6 +15,7 @@ public enum AuthStep {
         this.step = step;
     }
 
+    @JsonValue
     public String getAuthStep(){
         return this.step;
     }
