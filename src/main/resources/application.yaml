@@ -1,6 +1,7 @@
 spring:
   application:
     name: user
+    version: 1.0.0
 
   datasource:
     username: postgres
