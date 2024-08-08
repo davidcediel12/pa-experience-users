@@ -1,4 +1,4 @@
-package com.pet.adoption.support.user.config;
+package com.pet.adoption.business.user.config;
 
 
 import org.springframework.context.annotation.Bean;

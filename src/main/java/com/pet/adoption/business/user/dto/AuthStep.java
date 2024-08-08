@@ -1,4 +1,4 @@
-package com.pet.adoption.support.user.dto;
+package com.pet.adoption.business.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

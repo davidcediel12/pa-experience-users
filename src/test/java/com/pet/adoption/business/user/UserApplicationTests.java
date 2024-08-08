@@ -1,4 +1,4 @@
-package com.pet.adoption.support.user;
+package com.pet.adoption.business.user;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.pet.adoption.support.user;
+package com.pet.adoption.business.user;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

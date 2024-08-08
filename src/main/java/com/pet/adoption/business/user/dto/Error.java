@@ -1,4 +1,4 @@
-package com.pet.adoption.support.user.dto;
+package com.pet.adoption.business.user.dto;
 
 import java.util.List;
 

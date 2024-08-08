@@ -1,8 +1,8 @@
-package com.pet.adoption.support.user.controller;
+package com.pet.adoption.business.user.controller;
 
-import com.pet.adoption.support.user.dto.AuthenticationResponse;
-import com.pet.adoption.support.user.dto.ResponseAction;
-import com.pet.adoption.support.user.dto.UserRequest;
+import com.pet.adoption.business.user.dto.AuthenticationResponse;
+import com.pet.adoption.business.user.dto.ResponseAction;
+import com.pet.adoption.business.user.dto.UserRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;

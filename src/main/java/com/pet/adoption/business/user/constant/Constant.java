@@ -1,4 +1,4 @@
-package com.pet.adoption.support.user.constant;
+package com.pet.adoption.business.user.constant;
 
 public class Constant {
 
