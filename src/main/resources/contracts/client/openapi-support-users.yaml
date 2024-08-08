@@ -1,0 +1,135 @@
+openapi: 3.0.3
+info:
+  title: Support Users - OpenAPI 3.0
+  description: |-
+    
+    Specification of the Support API used to save users in the Gaia Pet Application
+  contact:
+    email: esdago18@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+servers:
+  - url: https://localhost:8081/users
+    description: Local development
+tags:
+  - name: user
+    description: Tag used to manage Users
+paths:
+  /user:
+    post:
+      tags:
+        - user
+      summary: Add a new user to the system
+      description: Add a new user to the system
+      operationId: addUser
+      requestBody:
+        description: Create a new user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+components:
+  responses:
+    BadRequest:
+      description: The information is not correct
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Unauthorized:
+      description: Unauthenticated, unable to perform the operation
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Forbidden:
+      description: Not enough privileges to perform the operation
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+  schemas:
+    User:
+      type: object
+      properties:
+        identityId:
+          type: string
+          format: uuid
+          example: 115de516-ae8a-4db5-b63b-969c6696a848
+        name:
+          type: string
+          example: David
+        email:
+          type: string
+          format: email
+          example: foo@bar.com
+        country:
+          type: string
+          example: Spain
+        role:
+          type: string
+          example: Foundation
+          enum: [USER, FOUNDATION]
+        postalCode:
+          type: string
+          pattern: '\d{5-6}'
+          example: 28024
+    ErrorResponse:
+      required:
+        - developerMessage
+        - errorCode
+        - userMessage
+      type: object
+      properties:
+        errorCode:
+          maxLength: 6
+          pattern: "^[a-zA-Z]+$\\d+$"
+          type: string
+          example: "6"
+        developerMessage:
+          maxLength: 256
+          pattern: "^[a-zA-Z\\s]*$"
+          type: string
+          example: It was not possible to save the record in the database
+        userMessage:
+          maxLength: 256
+          pattern: "^[a-zA-Z\\s]*$"
+          type: string
+          example: Error saving the user
+        status:
+          minimum: 100
+          maximum: 599
+          type: integer
+          example: 409
+
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+    appId:
+      type: apiKey
+      in: header
+      name: X-APP-ID
+
+security:
+  - apiKey: []
+    appId: []
+

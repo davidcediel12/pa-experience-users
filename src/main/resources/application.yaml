@@ -24,3 +24,7 @@ server:
     key-store: classpath:gaia-key.pfx
     key-store-password:
     protocol: TLS
+
+api:
+  support-user:
+    base-path: http://localhost:8081/users

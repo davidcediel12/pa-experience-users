@@ -42,9 +42,22 @@ dependencies {
 openApiGenerate {
 	generatorName.set('java')
 	configOptions.set([
-			library: 'restclient'
+			library: 'restclient',
+			openApiNullable: 'false'
 	])
+	inputSpec = "$rootDir/src/main/resources/contracts/client/openapi-support-users.yaml".toString()
+	ignoreFileOverride = ".openapi-generator-java-sources.ignore"
+	invokerPackage = 'com.pet.adoption.business.user.client'
+	modelPackage = 'com.pet.adoption.business.user.client.model'
+	apiPackage = 'com.pet.adoption.business.user.client.api'
+
 }
+
+tasks.named('compileJava'){
+	dependsOn(tasks.openApiGenerate)
+}
+
+sourceSets.main.java.srcDir "${buildDir}/generate-resources/main/src/main/java"
 
 tasks.named('test') {
 	useJUnitPlatform()
