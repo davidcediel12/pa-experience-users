@@ -37,6 +37,9 @@ dependencies {
 	implementation 'com.azure.spring:azure-spring-boot-starter-keyvault-certificates:3.14.0'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 }
 
 openApiGenerate {
