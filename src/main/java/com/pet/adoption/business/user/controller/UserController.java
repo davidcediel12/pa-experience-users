@@ -8,10 +8,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.Map;
 
 @RestController
@@ -26,15 +28,23 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<AuthenticationResponse> createUser(@RequestHeader Map<String, String> headers,
-                                                             @Valid @RequestBody UserRequest user){
+                                                             @Valid @RequestBody UserRequest user) {
 
-        userService.createUser(user);
-
+        log.info("Received new message to save the user " + user.displayName());
         log.debug(headers.toString());
         log.debug(user.toString());
-        
-        return ResponseEntity.ok(new AuthenticationResponse(
-                version, HttpStatus.OK.value(), ResponseAction.CONTINUE, "All right"));
+
+
+        URI location = userService.createUser(user);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setLocation(location);
+
+
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(new AuthenticationResponse(
+                        version, HttpStatus.OK.value(),
+                        ResponseAction.CONTINUE, "All right"));
 
     }
 }
