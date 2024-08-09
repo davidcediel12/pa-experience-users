@@ -5,6 +5,8 @@ import com.pet.adoption.business.user.client.api.UserApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClient;
 
 @Configuration
@@ -17,6 +19,8 @@ public class ApiConfig {
     ApiClient apiClient(RestClient.Builder builder) {
         ApiClient apiClient = new ApiClient(builder.build());
         apiClient.setBasePath(supportUserBasePath);
+        apiClient.addDefaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+        apiClient.addDefaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         return apiClient;
     }
 

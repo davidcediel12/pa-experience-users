@@ -27,4 +27,4 @@ server:
 
 api:
   support-user:
-    base-path: http://localhost:8081/users
+    base-path: http://localhost:8081
