@@ -4,11 +4,13 @@ import com.pet.adoption.business.user.client.api.UserApi;
 import com.pet.adoption.business.user.client.model.CreateUserResponse;
 import com.pet.adoption.business.user.client.model.User;
 import com.pet.adoption.business.user.dto.UserRequest;
+import com.pet.adoption.business.user.exception.ApiCallException;
 import com.pet.adoption.business.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.net.URI;
 
@@ -26,10 +28,16 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toUser(userRequest);
         log.info("Calling user api to save the user");
 
-        ResponseEntity<CreateUserResponse> userResponse = userApi.addUserWithHttpInfo(user);
-        log.info("User saved successfully");
-        log.debug("Response {} END", userResponse.toString());
+        try {
+            ResponseEntity<CreateUserResponse> userResponse = userApi.addUserWithHttpInfo(user);
+            log.info("User saved successfully");
+            log.debug("Response {} END", userResponse.toString());
 
-        return userResponse.getHeaders().getLocation();
+            return userResponse.getHeaders().getLocation();
+
+        } catch (HttpClientErrorException e) {
+            throw new ApiCallException("Support users", e);
+        }
+
     }
 }
