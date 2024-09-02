@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
         log.info("Calling user api to save the user");
 
         ResponseEntity<CreateUserResponse> userResponse = userApi.addUserWithHttpInfo(user);
+        log.info("User saved successfully");
         log.debug("Response {} END", userResponse.toString());
 
         return userResponse.getHeaders().getLocation();
