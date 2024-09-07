@@ -63,6 +63,7 @@ public class UserControllerAdvice {
     @ExceptionHandler(ResourceAccessException.class)
     private ResponseEntity<Error> handleResourceAccessException(ResourceAccessException e) {
 
+        log.error("Error calling the API {}", e.getMessage());
         var error = new Error("BS-03", "Couldn't obtain the information", List.of(e.getMessage()));
         return new ResponseEntity<>(error, HttpStatus.BAD_GATEWAY);
     }
