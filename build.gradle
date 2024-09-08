@@ -60,7 +60,7 @@ tasks.named('compileJava'){
 	dependsOn(tasks.openApiGenerate)
 }
 
-sourceSets.main.java.srcDir "${buildDir}/generate-resources/main/src/main/java"
+sourceSets.main.java.srcDir layout.buildDirectory.dir("/generate-resources/main/src/main/java")
 
 tasks.named('test') {
 	useJUnitPlatform()
