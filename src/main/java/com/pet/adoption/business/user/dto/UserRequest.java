@@ -10,6 +10,7 @@ public record UserRequest(AuthStep step,
                           String displayName,
                           String country,
                           @JsonProperty(Constant.ROLE_PARAM_NAME)
-                          String role) {
+                          String role,
+                          String postalCode) {
 
 }
