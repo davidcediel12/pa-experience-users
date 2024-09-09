@@ -75,6 +75,11 @@ components:
   schemas:
     User:
       type: object
+      required:
+        - identityId
+        - name
+        - email
+        - role
       properties:
         identityId:
           type: string
