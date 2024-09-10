@@ -4,17 +4,21 @@ import com.pet.adoption.business.user.client.api.UserApi;
 import com.pet.adoption.business.user.client.model.CreateUserResponse;
 import com.pet.adoption.business.user.client.model.User;
 import com.pet.adoption.business.user.dto.AuthStep;
+import com.pet.adoption.business.user.dto.AuthenticationResponse;
+import com.pet.adoption.business.user.dto.ResponseAction;
 import com.pet.adoption.business.user.dto.UserRequest;
 import com.pet.adoption.business.user.exception.ApiCallException;
 import com.pet.adoption.business.user.mapper.UserMapper;
 import com.pet.adoption.business.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.net.URI;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -25,30 +29,39 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
 
+    @Value("${spring.application.version}")
+    private String version;
+
     @Override
-    public URI createUser(UserRequest userRequest) {
+    public ResponseEntity<AuthenticationResponse> createUser(UserRequest userRequest) {
 
         boolean isSignUp = userRequest.step().equals(AuthStep.POST_ATTRIBUTE_COLLECTION);
 
-        if(isSignUp){
+        if (isSignUp) {
             return saveNewUser(userRequest);
         }
 
         boolean isSignIn = userRequest.step().equals(AuthStep.PRE_TOKEN_ISSUANCE);
 
-        if(isSignIn){
+        if (isSignIn) {
             return saveExistentUserInCache(userRequest);
         }
 
         throw new IllegalStateException("Oops");
     }
 
-    private URI saveExistentUserInCache(UserRequest userRequest) {
-        return URI.create(userRepository.saveUser(userRequest));
+    private ResponseEntity<AuthenticationResponse> saveExistentUserInCache(UserRequest userRequest) {
+        String userId = userRepository.saveUser(userRequest);
+
+        return ResponseEntity.ok()
+                .body(new AuthenticationResponse(
+                        version, HttpStatus.OK.value(),
+                        ResponseAction.CONTINUE, "All right", userId));
+
     }
 
 
-    private URI saveNewUser(UserRequest userRequest) {
+    private ResponseEntity<AuthenticationResponse> saveNewUser(UserRequest userRequest) {
         User user = userMapper.toUser(userRequest);
         log.info("Calling user api to save the user");
 
@@ -57,7 +70,10 @@ public class UserServiceImpl implements UserService {
             log.info("User saved successfully");
             log.debug("Response {} END", userResponse.toString());
 
-            return userResponse.getHeaders().getLocation();
+            return ResponseEntity.created(Objects.requireNonNull(userResponse.getHeaders().getLocation()))
+                    .body(new AuthenticationResponse(
+                            version, HttpStatus.OK.value(),
+                            ResponseAction.CONTINUE, "All right"));
 
         } catch (HttpClientErrorException e) {
             throw new ApiCallException("Support users", e);
