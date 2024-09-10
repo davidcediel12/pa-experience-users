@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import static com.pet.adoption.business.user.util.ErrorConstants.JSON_TO_OBJECT_EXCEPTION;
 import static com.pet.adoption.business.user.util.ErrorConstants.OBJECT_TO_JSON_EXCEPTION;
 
 @Service
@@ -32,7 +33,7 @@ public class JsonSerializer {
             return mapper.readValue(json, clazz);
         } catch (JsonProcessingException e) {
             log.error("Error transforming the json {} to object of class {}", json, clazz, e);
-            throw OBJECT_TO_JSON_EXCEPTION;
+            throw JSON_TO_OBJECT_EXCEPTION;
         }
     }
 }
