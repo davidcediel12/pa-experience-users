@@ -31,5 +31,10 @@ public enum AuthStep {
         throw new IllegalArgumentException("Invalid Auth Step: " + value);
     }
 
+    @Override
+    public String toString() {
+        return this.step;
+    }
+
 
 }
