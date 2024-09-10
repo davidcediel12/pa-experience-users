@@ -16,6 +16,12 @@ spring:
   output:
     ansi:
       enabled: ALWAYS
+  data:
+    redis:
+      port: 6379
+      host: localhost
+      database: 0
+
 
 server:
     client-auth: WANT
