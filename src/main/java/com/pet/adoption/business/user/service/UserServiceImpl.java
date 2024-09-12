@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
         boolean isSignIn = userRequest.step().equals(AuthStep.PRE_TOKEN_ISSUANCE);
 
         if (isSignIn) {
+            log.info("Saving user into cache");
             return saveExistentUserInCache(userRequest);
         }
 
@@ -52,6 +53,7 @@ public class UserServiceImpl implements UserService {
 
     private ResponseEntity<AuthenticationResponse> saveExistentUserInCache(UserRequest userRequest) {
         String userId = userRepository.saveUser(userRequest);
+        log.info("User saved into cache successfully");
 
         return ResponseEntity.ok()
                 .body(new AuthenticationResponse(
@@ -63,7 +65,7 @@ public class UserServiceImpl implements UserService {
 
     private ResponseEntity<AuthenticationResponse> saveNewUser(UserRequest userRequest) {
         User user = userMapper.toUser(userRequest);
-        log.info("Calling user api to save the user");
+        log.info("Calling user support api to save the user");
 
         try {
             ResponseEntity<CreateUserResponse> userResponse = userApi.addUserWithHttpInfo(user);

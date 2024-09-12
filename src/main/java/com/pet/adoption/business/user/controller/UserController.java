@@ -24,7 +24,7 @@ public class UserController {
     public ResponseEntity<AuthenticationResponse> createUser(@RequestHeader Map<String, String> headers,
                                                              @Valid @RequestBody UserRequest user) {
 
-        log.info("Received new message after action {} of the user {}", user.step(), user.displayName());
+        log.info("Received new message with action {} of the user {}", user.step(), user.displayName());
         log.debug(headers.toString());
         log.debug(user.toString());
 
