@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.cloud.contract.stubrunner.spring.AutoConfigureStubRunner;
+import org.springframework.cloud.contract.stubrunner.spring.StubRunnerProperties;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.Objects;
 import java.util.Set;
 
 import static com.pet.adoption.business.user.util.Constants.USER_REQUEST;
@@ -29,6 +32,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureStubRunner(ids = "com.per.adoption:support.users:+:8081",
+        stubsMode = StubRunnerProperties.StubsMode.LOCAL)
 class UserControllerIntegrationTest {
 
     static RedisContainer redis = new RedisContainer(DockerImageName.parse("redis:7-alpine"));
@@ -52,6 +57,7 @@ class UserControllerIntegrationTest {
     @BeforeEach
     void setup() {
         RestAssured.baseURI = "http://localhost:" + port;
+        Objects.requireNonNull(redisTemplate.keys("*")).forEach(redisTemplate::delete);
     }
 
 
@@ -91,6 +97,20 @@ class UserControllerIntegrationTest {
         String userName = savedUser.read("$.displayName");
 
         assertThat(userName).isEqualTo(USER_REQUEST.displayName());
+    }
+
+
+    @Test
+    void shouldSaveUserInDatabaseWhenSignUpAttempt() {
+        given()
+                .contentType(ContentType.JSON)
+                .body(USER_REQUEST)
+                .when()
+                .post("/users")
+                .then()
+                .statusCode(HttpStatus.CREATED.value());
+
+        assertThat(redisTemplate.keys("*")).isEmpty();
     }
 
 
