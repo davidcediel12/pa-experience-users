@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
 
             return ResponseEntity.created(Objects.requireNonNull(userResponse.getHeaders().getLocation()))
                     .body(new AuthenticationResponse(
-                            version, HttpStatus.OK.value(),
+                            version, HttpStatus.CREATED.value(),
                             ResponseAction.CONTINUE, "All right"));
 
         } catch (HttpClientErrorException e) {
