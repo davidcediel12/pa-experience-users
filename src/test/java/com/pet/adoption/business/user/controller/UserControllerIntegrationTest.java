@@ -33,7 +33,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureStubRunner(ids = "com.per.adoption:support.users:+:8081",
-        stubsMode = StubRunnerProperties.StubsMode.LOCAL)
+        repositoryRoot = "git://https://github.com/davidcediel12/pet-adoption-contracts.git",
+        stubsMode = StubRunnerProperties.StubsMode.REMOTE,
+        properties = {"git.branch=main"})
 class UserControllerIntegrationTest {
 
     static RedisContainer redis = new RedisContainer(DockerImageName.parse("redis:7-alpine"));
