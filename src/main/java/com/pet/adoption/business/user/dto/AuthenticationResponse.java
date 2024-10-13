@@ -1,7 +1,14 @@
 package com.pet.adoption.business.user.dto;
 
-public record AuthenticationResponse(String version, Integer status, ResponseAction action,
-                                     String userMessage, String userId) {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record AuthenticationResponse(String version,
+                                     Integer status, ResponseAction action,
+                                     String userMessage,
+                                     @JsonProperty(value = "extension_userId", access = JsonProperty.Access.WRITE_ONLY)
+                                     String userId) {
+
+
 
     public AuthenticationResponse(String version, Integer status, ResponseAction action,
                                   String userMessage){
