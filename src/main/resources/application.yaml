@@ -24,7 +24,7 @@ spring:
       lifetime-minutes: 90
 
 
-server:
+  server:
     client-auth: WANT
     enabled: true
     key-store-type: PKCS12
@@ -35,3 +35,9 @@ server:
 api:
   support-user:
     base-path: http://localhost:8081
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,loggers
