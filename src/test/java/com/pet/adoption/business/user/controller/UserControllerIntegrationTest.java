@@ -29,6 +29,7 @@ import java.util.Set;
 import static com.pet.adoption.business.user.util.Constants.USER_REQUEST;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.notNullValue;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -100,6 +101,24 @@ class UserControllerIntegrationTest {
 
         assertThat(userName).isEqualTo(USER_REQUEST.displayName());
     }
+
+    @Test
+    void shouldReturnCreatedUserIdWhenSignInAttempt() {
+
+        UserRequest userRequest = new UserRequest(AuthStep.PRE_TOKEN_ISSUANCE,
+                USER_REQUEST.clientId(), USER_REQUEST.email(), USER_REQUEST.displayName(), USER_REQUEST.country(),
+                USER_REQUEST.role(), USER_REQUEST.postalCode());
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(userRequest)
+                .when()
+                .post("/users")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("extension_userId", notNullValue());
+    }
+
 
 
     @Test

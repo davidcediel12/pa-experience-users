@@ -55,10 +55,12 @@ public class UserServiceImpl implements UserService {
         String userId = userRepository.saveUser(userRequest);
         log.info("User saved into cache successfully");
 
+        AuthenticationResponse authResponse = new AuthenticationResponse(
+                version, HttpStatus.OK.value(),
+                ResponseAction.CONTINUE, "All right", userId);
+
         return ResponseEntity.ok()
-                .body(new AuthenticationResponse(
-                        version, HttpStatus.OK.value(),
-                        ResponseAction.CONTINUE, "All right", userId));
+                .body(authResponse);
 
     }
 
