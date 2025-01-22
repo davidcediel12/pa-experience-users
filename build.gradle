@@ -73,9 +73,9 @@ openApiGenerate {
 	])
 	inputSpec = "$rootDir/src/main/resources/contracts/client/openapi-support-users.yaml".toString()
 	ignoreFileOverride = ".openapi-generator-java-sources.ignore"
-	invokerPackage = 'com.pet.adoption.business.user.client'
-	modelPackage = 'com.pet.adoption.business.user.client.model'
-	apiPackage = 'com.pet.adoption.business.user.client.api'
+	invokerPackage = 'com.pet.adoption.support.user.client'
+	modelPackage = 'com.pet.adoption.support.user.client.model'
+	apiPackage = 'com.pet.adoption.support.user.client.api'
 
 }
 

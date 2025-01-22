@@ -1,6 +1,6 @@
 package com.pet.adoption.experience.user.mapper;
 
-import com.pet.adoption.experience.user.client.model.User;
+import com.pet.adoption.support.user.client.model.User;
 import com.pet.adoption.experience.user.dto.UserRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

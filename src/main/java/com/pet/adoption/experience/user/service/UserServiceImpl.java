@@ -1,8 +1,8 @@
 package com.pet.adoption.experience.user.service;
 
-import com.pet.adoption.experience.user.client.api.UserApi;
-import com.pet.adoption.experience.user.client.model.CreateUserResponse;
-import com.pet.adoption.experience.user.client.model.User;
+import com.pet.adoption.support.user.client.api.UserApi;
+import com.pet.adoption.support.user.client.model.CreateUserResponse;
+import com.pet.adoption.support.user.client.model.User;
 import com.pet.adoption.experience.user.dto.AuthStep;
 import com.pet.adoption.experience.user.dto.AuthenticationResponse;
 import com.pet.adoption.experience.user.dto.ResponseAction;

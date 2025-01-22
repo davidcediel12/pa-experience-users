@@ -1,7 +1,8 @@
 package com.pet.adoption.experience.user.config;
 
-import com.pet.adoption.experience.user.client.ApiClient;
-import com.pet.adoption.experience.user.client.api.UserApi;
+
+import com.pet.adoption.support.user.client.ApiClient;
+import com.pet.adoption.support.user.client.api.UserApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
