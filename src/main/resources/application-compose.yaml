@@ -1,0 +1,4 @@
+
+api:
+  support-user:
+    base-path: http://sp-users:8080
