@@ -9,7 +9,7 @@ on:
 jobs:
 
   build:
-    environment: pet-adoption-project
+    environment: development
     runs-on: ubuntu-latest
     permissions:
       contents: read
