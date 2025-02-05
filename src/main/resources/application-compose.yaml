@@ -1,4 +1,10 @@
-
+spring:
+  data:
+    redis:
+      port: 6379
+      host: redis
+      database: 0
+      lifetime-minutes: 90
 api:
   support-user:
     base-path: http://sp-users:8080
