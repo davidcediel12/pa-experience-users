@@ -1,0 +1,45 @@
+name: Upload-To-Registry
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+    environment: pet-adoption-project
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '22'
+          distribution: 'temurin'
+
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
+
+      # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
+      # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+
+      - name: Build Docker Image
+        run: ./gradlew bootBuildImage --imageName=${{ vars.DOCKERHUB_USERNAME }}/experience-users:0.0.1-SNAPSHOT
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push Image to DockerHub
+        run: docker push ${{ vars.DOCKERHUB_USERNAME }}/experience-users:0.0.1-SNAPSHOT
