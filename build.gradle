@@ -79,9 +79,7 @@ openApiGenerate {
 
 }
 
-tasks.named('compileJava'){
-	dependsOn(tasks.openApiGenerate)
-}
+compileJava.dependsOn tasks.openApiGenerate
 
 sourceSets.main.java.srcDir layout.buildDirectory.dir("/generate-resources/main/src/main/java")
 
