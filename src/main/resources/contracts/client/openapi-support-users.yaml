@@ -103,6 +103,15 @@ components:
           type: string
           pattern: '\d{5-6}'
           example: 28024
+        issuerName:
+          type: string
+          example: google.com
+          description: user that emits the user
+        issuerId:
+          type: string
+          example: 110692938871363016117
+          description: Internal ID used by the issuer for the user
+
     CreateUserResponse:
       type: object
       properties:
@@ -154,4 +163,3 @@ components:
 security:
   - apiKey: []
     appId: []
-
