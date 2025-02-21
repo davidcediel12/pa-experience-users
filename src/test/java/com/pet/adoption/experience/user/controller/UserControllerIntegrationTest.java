@@ -76,7 +76,7 @@ class UserControllerIntegrationTest {
 
         UserRequest userRequest = new UserRequest(AuthStep.PRE_TOKEN_ISSUANCE,
                 USER_REQUEST.clientId(), USER_REQUEST.email(), USER_REQUEST.displayName(), USER_REQUEST.country(),
-                USER_REQUEST.role(), USER_REQUEST.postalCode());
+                USER_REQUEST.role(), USER_REQUEST.postalCode(), USER_REQUEST.identities());
 
         given()
                 .contentType(ContentType.JSON)
@@ -107,7 +107,7 @@ class UserControllerIntegrationTest {
 
         UserRequest userRequest = new UserRequest(AuthStep.PRE_TOKEN_ISSUANCE,
                 USER_REQUEST.clientId(), USER_REQUEST.email(), USER_REQUEST.displayName(), USER_REQUEST.country(),
-                USER_REQUEST.role(), USER_REQUEST.postalCode());
+                USER_REQUEST.role(), USER_REQUEST.postalCode(), USER_REQUEST.identities());
 
         given()
                 .contentType(ContentType.JSON)

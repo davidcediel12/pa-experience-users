@@ -1,7 +1,10 @@
 package com.pet.adoption.experience.user.util;
 
 import com.pet.adoption.experience.user.dto.AuthStep;
+import com.pet.adoption.experience.user.dto.UserIdentity;
 import com.pet.adoption.experience.user.dto.UserRequest;
+
+import java.util.List;
 
 public class Constants {
 
@@ -13,7 +16,8 @@ public class Constants {
 
     public static final UserRequest USER_REQUEST = new UserRequest(
             AuthStep.POST_ATTRIBUTE_COLLECTION, GENERIC_UUID,
-            "user@email.com", "user name", "Spain", "USER", "298271");
+            "user@email.com", "user name", "Spain", "USER", "298271",
+            List.of(new UserIdentity("google", "google12")));
 
     public static final String USER_REQUEST_JSON = """
                 {

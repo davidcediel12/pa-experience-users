@@ -1,9 +1,9 @@
 openapi: 3.0.3
 info:
-  title: Support Users - OpenAPI 3.0
+  title: Experience Users - OpenAPI 3.0
   description: |-
     
-    Specification of the Support API used to save users in the Gaia Pet Application
+    Specification of the Experience API used to manage users in the Gaia Pet Application
   contact:
     email: esdago18@gmail.com
   license:
@@ -11,7 +11,7 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.11
 servers:
-  - url: https://localhost:8081
+  - url: https://localhost:8080
     description: Local development
 tags:
   - name: user
@@ -21,8 +21,14 @@ paths:
     post:
       tags:
         - user
-      summary: Add a new user to the system
-      description: Add a new user to the system
+      summary: |
+        Receive the request from the authentication third party service related with a user
+      
+
+      description: |
+        There are two possible operations, depending on the *AuthStep* patameter
+        1. PostAttributeCollection: It means that is a user creation, in this case, the API will create the user 
+        2. PreTokenIssuance: It means that is a user login, in this case, the API will save the user information in cache
       operationId: addUser
       requestBody:
         description: Create a new user
@@ -43,7 +49,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateUserResponse"
+                $ref: "#/components/schemas/AuthenticationResponse"
 
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -66,6 +72,7 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorResponse"
+
     Forbidden:
       description: Not enough privileges to perform the operation
       content:
@@ -76,22 +83,33 @@ components:
     User:
       type: object
       required:
-        - identityId
-        - name
+        - step
+        - clientId
         - email
+        - displayName
         - role
       properties:
-        identityId:
+        step:
+          type: string
+          enum:
+            - "PostFederationSignup"
+            - "PostAttributeCollection"
+            - "PreTokenIssuance"
+          description: Determines the intended operation
+        client_id:
           type: string
           format: uuid
           example: 115de516-ae8a-4db5-b63b-969c6696a848
-        name:
+          description: Id of the vendor that generate the identity (Ex. Google, Microsoft, etc.)
+        displayName:
           type: string
           example: David
+          description: Display name of the user
         email:
           type: string
           format: email
           example: foo@bar.com
+          description: user email
         country:
           type: string
           example: Spain
@@ -103,25 +121,36 @@ components:
           type: string
           pattern: '\d{5-6}'
           example: 28024
-        issuerName:
-          type: string
-          example: google.com
-          description: user that emits the user
-        issuerId:
-          type: string
-          example: 110692938871363016117
-          description: Internal ID used by the issuer for the user
-
-    CreateUserResponse:
+    AuthenticationResponse:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          example: 83
-        createdAt:
+        version:
           type: string
-          format: date-time
+          example: '1.0.0'
+          description: API version
+        status:
+          type: number
+          format: int32
+          example: 400
+          description: Used for a validation error response, the unique possible value is 400
+          enum: [400]
+        userMessage:
+          type: string
+          example: Please enter a valid postal code
+          description: Used to provide information to the user when there is an error
+        action:
+          type: string
+          enum:
+            - "Continue"
+            - "ShowBlockPage"
+            - "ValidationError"
+          description: Tells to the auth server what to do next
+        userId:
+          type: string
+          format: uuid
+          example: bb7cbd57-541c-4015-a291-b2da85a92c30
+          description: If it is a sign in attempt, the user id is provided to recognize the user during the session
+
     ErrorResponse:
       required:
         - developerMessage
@@ -129,26 +158,19 @@ components:
         - userMessage
       type: object
       properties:
-        errorCode:
+        code:
           maxLength: 6
           pattern: "^[a-zA-Z]+$\\d+$"
           type: string
           example: "6"
-        developerMessage:
+        message:
           maxLength: 256
           pattern: "^[a-zA-Z\\s]*$"
           type: string
-          example: It was not possible to save the record in the database
-        userMessage:
-          maxLength: 256
-          pattern: "^[a-zA-Z\\s]*$"
-          type: string
-          example: Error saving the user
-        status:
-          minimum: 100
-          maximum: 599
-          type: integer
-          example: 409
+          example: It was not possible to process the request
+        detailedMessages:
+          type: array
+          example: [Error performing the operation]
 
   securitySchemes:
     apiKey:
@@ -163,3 +185,4 @@ components:
 security:
   - apiKey: []
     appId: []
+
