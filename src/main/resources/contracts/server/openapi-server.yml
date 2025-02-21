@@ -1,0 +1,188 @@
+openapi: 3.0.3
+info:
+  title: Experience Users - OpenAPI 3.0
+  description: |-
+    
+    Specification of the Experience API used to manage users in the Gaia Pet Application
+  contact:
+    email: esdago18@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+servers:
+  - url: https://localhost:8080
+    description: Local development
+tags:
+  - name: user
+    description: Tag used to manage Users
+paths:
+  /users:
+    post:
+      tags:
+        - user
+      summary: |
+        Receive the request from the authentication third party service related with a user
+      
+
+      description: |
+        There are two possible operations, depending on the *AuthStep* patameter
+        1. PostAttributeCollection: It means that is a user creation, in this case, the API will create the user 
+        2. PreTokenIssuance: It means that is a user login, in this case, the API will save the user information in cache
+      operationId: addUser
+      requestBody:
+        description: Create a new user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+          headers:
+            Location:
+              schema:
+                type: string
+                description: resource URI
+                example: "/users/2028"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthenticationResponse"
+
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+components:
+  responses:
+    BadRequest:
+      description: The information is not correct
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Unauthorized:
+      description: Unauthenticated, unable to perform the operation
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    Forbidden:
+      description: Not enough privileges to perform the operation
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+  schemas:
+    User:
+      type: object
+      required:
+        - step
+        - clientId
+        - email
+        - displayName
+        - role
+      properties:
+        step:
+          type: string
+          enum:
+            - "PostFederationSignup"
+            - "PostAttributeCollection"
+            - "PreTokenIssuance"
+          description: Determines the intended operation
+        client_id:
+          type: string
+          format: uuid
+          example: 115de516-ae8a-4db5-b63b-969c6696a848
+          description: Id of the vendor that generate the identity (Ex. Google, Microsoft, etc.)
+        displayName:
+          type: string
+          example: David
+          description: Display name of the user
+        email:
+          type: string
+          format: email
+          example: foo@bar.com
+          description: user email
+        country:
+          type: string
+          example: Spain
+        role:
+          type: string
+          example: Foundation
+          enum: [USER, FOUNDATION]
+        postalCode:
+          type: string
+          pattern: '\d{5-6}'
+          example: 28024
+    AuthenticationResponse:
+      type: object
+      properties:
+        version:
+          type: string
+          example: '1.0.0'
+          description: API version
+        status:
+          type: number
+          format: int32
+          example: 400
+          description: Used for a validation error response, the unique possible value is 400
+          enum: [400]
+        userMessage:
+          type: string
+          example: Please enter a valid postal code
+          description: Used to provide information to the user when there is an error
+        action:
+          type: string
+          enum:
+            - "Continue"
+            - "ShowBlockPage"
+            - "ValidationError"
+          description: Tells to the auth server what to do next
+        userId:
+          type: string
+          format: uuid
+          example: bb7cbd57-541c-4015-a291-b2da85a92c30
+          description: If it is a sign in attempt, the user id is provided to recognize the user during the session
+
+    ErrorResponse:
+      required:
+        - developerMessage
+        - errorCode
+        - userMessage
+      type: object
+      properties:
+        code:
+          maxLength: 6
+          pattern: "^[a-zA-Z]+$\\d+$"
+          type: string
+          example: "6"
+        message:
+          maxLength: 256
+          pattern: "^[a-zA-Z\\s]*$"
+          type: string
+          example: It was not possible to process the request
+        detailedMessages:
+          type: array
+          example: [Error performing the operation]
+
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+    appId:
+      type: apiKey
+      in: header
+      name: X-APP-ID
+
+security:
+  - apiKey: []
+    appId: []
+
